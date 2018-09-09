@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="../css/template.css" type="text/css" />
+    <title>Страница</title>
+</head>
+<body>
+
+<style>
+
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body, html {
+        background: rgba(243, 129, 129, 0.9) no-repeat center center fixed;
+        background-size: cover;
+        height: 100%;
+    }
+
+    @font-face {
+        font-family: 'KaushanScript-Regular';
+        src: url('KaushanScript-Regular.ttf') format('ttf'),
+        url('KaushanScript-Regular.svg') format('svg'),
+        url('KaushanScript-Regular.woff') format('woff'),
+        url('KaushanScript-Regular.woff2') format('woff2');
+        font-weight: 400;
+        font-style: normal;
+    }
+
+    .l-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+
+    .l-p {
+        font-family: 'KaushanScript-Regular', Arial, sans-serif;
+        margin: 0 10px 0 0;
+    }
+
+    .timer { font-size: 50px; font-family: 'KaushanScript-Regular', Arial, sans-serif; color: #ffffff }
+    .timer #days { color: #ffffff; }
+    .timer #hours { color: #ffffff; }
+    .timer #minutes { color: #ffffff; }
+    .timer #seconds { color: #ffffff; }
+</style>
+    <div class="timer l-wrapper">
+        <p class="l-p">День</p>
+        <span id="days"></span>
+        <span id="delimiter">:</span>
+        <span id="hours"></span>
+        <span id="delimiter">:</span>
+        <span id="minutes"></span>
+        <span id="delimiter">:</span>
+        <span id="seconds"></span>
+    </div>
+<script>
+    function updater(d, h, m, s) {
+        // День сброса - 27 сентября 2015 года (и далее каждые три дня)
+        var baseTime = new Date(2018, 09, 10);
+        // Период сброса — 3 дня
+        var period = 1*24*60*60*1000;
+
+        function update() {
+            var cur = new Date();
+            // сколько осталось миллисекунд
+            var diff = period - (cur - baseTime) % period;
+            // сколько миллисекунд до конца секунды
+            var millis = diff % 1000;
+            diff = Math.floor(diff/1000);
+            // сколько секунд до конца минуты
+            var sec = diff % 60;
+            if(sec < 10) sec = "0"+sec;
+            diff = Math.floor(diff/60);
+            // сколько минут до конца часа
+            var min = diff % 60;
+            if(min < 10) min = "0"+min;
+            diff = Math.floor(diff/60);
+            // сколько часов до конца дня
+            var hours = diff % 24;
+            if(hours < 10) hours = "0"+hours;
+            var days = Math.floor(diff / 24);
+            d.innerHTML = days;
+            h.innerHTML = hours;
+            m.innerHTML = min;
+            s.innerHTML = sec;
+
+            // следующий раз вызываем себя, когда закончится текущая секунда
+            setTimeout(update, millis);
+        }
+        setTimeout(update, 0);
+    }
+
+    updater(document.getElementById("days"),
+        document.getElementById("hours"), document.getElementById("minutes"),
+        document.getElementById("seconds"));
+</script>
+</body>
+</html>
+
